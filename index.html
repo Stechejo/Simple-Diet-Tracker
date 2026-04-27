@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diät Tracker</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-inner">
+            <div>
+                <h1>DIÄT TRACKER</h1>
+                <p id="headerSub">LADE...</p>
+            </div>
+            <div class="header-actions">
+                <button id="settingsBtn" class="lang-btn" onclick="openSettingsModal()">⚙ Einstellungen</button>
+                <button id="langToggle" class="lang-btn" onclick="toggleLang()">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="wrap">
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-label">Abgenommen</div>
+                <div class="stat-value" id="statLost">-</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Ø Defizit</div>
+                <div class="stat-value" id="statDeficit">-</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">7T Gewicht</div>
+                <div class="stat-value" id="statTrend">-</div>
+            </div>
+            <div class="stat">
+                <div class="stat-label">Heute</div>
+                <div class="stat-value" id="statCurrent">-</div>
+            </div>
+        </div>
+
+        <div class="insight-grid">
+            <div class="insight">
+                <div class="insight-label">Heute im Plan?</div>
+                <div class="insight-main" id="planMain">-</div>
+                <div class="insight-sub" id="planSub" data-empty="true">Trage Werte ein, um Feedback zu sehen.</div>
+            </div>
+            <div class="insight">
+                <div class="insight-label">Prognose</div>
+                <div class="insight-main" id="forecastMain">-</div>
+                <div class="insight-sub" id="forecastSub" data-empty="true">Basierend auf deinem bisherigen Durchschnitt.</div>
+            </div>
+        </div>
+
+        <div class="chart-box">
+            <div class="chart-head">
+                <div class="chart-label">Gewichtsverlauf</div>
+                <div class="legend"><span>Gewicht</span><span class="trend">7T Trend</span></div>
+                <select id="rangeSelect" class="range-select" onchange="setRange(this.value)">
+                    <option value="7" selected>1 Woche</option>
+                    <option value="14">2 Wochen</option>
+                    <option value="30">1 Monat</option>
+                    <option value="90">3 Monate</option>
+                    <option value="180">6 Monate</option>
+                    <option value="365">12 Monate</option>
+                </select>
+            </div>
+            <svg class="spark" id="sparkSvg" viewBox="0 0 260 70"></svg>
+            <div class="spark-days" id="sparkDays"></div>
+        </div>
+
+        <div class="quick-actions">
+            <button class="primary-action" onclick="openEntryModal()">+ Eintrag hinzufügen</button>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('uebersicht')">Übersicht</button>
+            <button class="tab" onclick="switchTab('perioden')">Wochen/Monate</button>
+        </div>
+        <div class="backup-bar">
+            <button class="backup-btn" onclick="exportData()">Exportieren</button>
+            <label class="backup-btn" for="importFile">Importieren</label>
+            <input type="file" id="importFile" accept=".txt" style="display:none" onchange="importData(this)">
+        </div>
+        <div class="panel active" id="panel-uebersicht">
+            <div class="table-head">
+                <span>Tag</span><span>Datum</span><span>Verbraucht</span><span>Intake</span><span>Defizit</span><span>Gewicht</span><span></span>
+            </div>
+            <div id="tableBody"></div>
+        </div>
+
+        <div class="panel" id="panel-perioden">
+            <div class="period-toolbar">
+                <button class="period-mode active" id="mode-weeks" onclick="setPeriodMode('weeks')">Wochen</button>
+                <button class="period-mode" id="mode-months" onclick="setPeriodMode('months')">Monate</button>
+                <span id="periodHint">Zeitraum oben wählen.</span>
+            </div>
+            <div class="period-grid" id="periodGrid"></div>
+        </div>
+
+        <div class="entry-modal" id="entryModal" aria-hidden="true">
+            <div class="entry-backdrop" onclick="closeEntryModal()"></div>
+            <div class="entry-sheet" role="dialog" aria-modal="true" aria-labelledby="entryModalTitle">
+                <div class="entry-sheet-head">
+                    <div>
+                        <div class="entry-kicker">Tracking</div>
+                        <h2 id="entryModalTitle">Neuer Eintrag</h2>
+                    </div>
+                    <button class="entry-close" onclick="closeEntryModal()" aria-label="Schließen">×</button>
+                </div>
+
+                <div class="form">
+                    <div class="field">
+                        <label>Datum</label>
+                        <input type="date" id="fDate" oninput="updatePreview()">
+                    </div>
+                    <div class="field">
+                        <label>Kalorien verbraucht (kcal)</label>
+                        <input type="number" id="fV" placeholder="z.B. 2800" min="0" step="1" oninput="updatePreview()">
+                    </div>
+                    <div class="field">
+                        <label>Kalorien Intake (kcal)</label>
+                        <input type="number" id="fI" placeholder="z.B. 1900" min="0" step="1" oninput="updatePreview()">
+                    </div>
+                    <div class="field">
+                        <label>Gewicht (kg)</label>
+                        <input type="number" id="fG" placeholder="z.B. 90,3" min="0" step="0.1" inputmode="decimal"
+                            oninput="updatePreview()">
+                    </div>
+                    <div class="preview" id="preview"></div>
+                    <div class="entry-actions">
+                        <button class="cancel-btn" id="cancelBtn" onclick="cancelEdit()">Abbrechen</button>
+                        <button class="add-btn" id="addBtn" onclick="addEntry()" disabled>Eintrag hinzufügen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="entry-modal" id="settingsModal" aria-hidden="true">
+            <div class="entry-backdrop" onclick="closeSettingsModal()"></div>
+            <div class="entry-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+                <div class="entry-sheet-head">
+                    <div>
+                        <div class="entry-kicker" id="settingsKicker">Setup</div>
+                        <h2 id="settingsModalTitle">Einstellungen</h2>
+                    </div>
+                    <button class="entry-close" onclick="closeSettingsModal()" aria-label="Schließen">×</button>
+                </div>
+
+                <div class="form">
+                    <div class="field">
+                        <label id="settingsStartLabel">Startgewicht (kg)</label>
+                        <input type="number" id="sStartWeight" placeholder="z.B. 91,4" min="0" step="0.1" inputmode="decimal">
+                    </div>
+                    <div class="field">
+                        <label id="settingsTargetLabel">Zielgewicht (kg)</label>
+                        <input type="number" id="sTargetWeight" placeholder="z.B. 85" min="0" step="0.1" inputmode="decimal">
+                    </div>
+                    <div class="field">
+                        <label id="settingsDeficitLabel">Geplantes Defizit (kcal/Tag)</label>
+                        <input type="number" id="sTargetDeficit" placeholder="z.B. 500" min="0" step="50">
+                    </div>
+                    <div class="preview" id="settingsPreview"></div>
+                    <div class="entry-actions">
+                        <button class="cancel-btn" id="settingsCancelBtn" onclick="closeSettingsModal()">Abbrechen</button>
+                        <button class="add-btn" id="settingsSaveBtn" onclick="saveSettings()">Speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">~1 kg Körperfett ≈ 7.000 kcal Defizit &nbsp;•&nbsp; Daten lokal gespeichert</div>
+    </div>
+    <div id="toast" class="toast" aria-live="polite"></div>
+    <script src="js/config.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/form.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
