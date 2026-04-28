@@ -14,8 +14,17 @@ export default function EntryModal({ form, setForm, editing, onClose, onSave, t 
       <div className="entry-backdrop" onClick={onClose}></div>
       <div className="entry-sheet" role="dialog" aria-modal="true">
         <div className="entry-sheet-head">
-          <div><div className="entry-kicker">{t.modalKicker}</div><h2>{editing ? t.modalTitleEdit : t.modalTitleNew}</h2></div>
-          <button className="entry-close" onClick={onClose} aria-label={t.btnClose}>×</button>
+          <div>
+            <div className="entry-kicker">
+              {t.modalKicker}
+            </div>
+            <h2>
+              {editing ? t.modalTitleEdit : t.modalTitleNew}
+            </h2>
+          </div>
+          <button className="entry-close" onClick={onClose} aria-label={t.btnClose}>
+            x
+          </button>
         </div>
         <div className="form">
           <Field label={t.fieldDate}><input type="date" value={form.date} onChange={event => setForm({ ...form, date: event.target.value })} /></Field>
@@ -24,8 +33,12 @@ export default function EntryModal({ form, setForm, editing, onClose, onSave, t 
           <Field label={t.fieldWeight}><input type="number" placeholder={t.phWeight} min="0" step="0.1" inputMode="decimal" value={form.gewicht} onChange={event => setForm({ ...form, gewicht: event.target.value })} /></Field>
           {(ok || (form.date && !dateOk)) && <div className={`preview ${form.date && !dateOk ? 'error' : ''}`} style={{ display: 'block' }}>{form.date && !dateOk ? t.previewDateError : t.previewDeficit(fmt(burned - intake), fmtWeight(weight))}</div>}
           <div className="entry-actions">
-            <button className="cancel-btn" onClick={onClose}>{t.btnCancel}</button>
-            <button className="add-btn" disabled={!ok} onClick={onSave}>{editing ? t.btnSave : t.btnAddNew}</button>
+            <button className="cancel-btn" onClick={onClose}>
+              {t.btnCancel}
+            </button>
+            <button className="add-btn" disabled={!ok} onClick={onSave}>
+              {editing ? t.btnSave : t.btnAddNew}
+            </button>
           </div>
         </div>
       </div>

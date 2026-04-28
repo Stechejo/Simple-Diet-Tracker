@@ -7,8 +7,12 @@ export default function Header({ t, headerSub, onOpenSettings, onToggleLang }) {
           <p>{headerSub}</p>
         </div>
         <div className="header-actions">
-          <button className="lang-btn" onClick={onOpenSettings}>{t.settings}</button>
-          <button className="lang-btn" onClick={onToggleLang}>{t.langToggle}</button>
+          <button className="lang-btn" onClick={onOpenSettings}>
+            {t.settings}
+          </button>
+          <button className="lang-btn" onClick={onToggleLang}>
+            {t.langToggle}
+          </button>
         </div>
       </div>
     </header>

@@ -25,14 +25,21 @@ export default function Spark({ entries, t, lang }) {
   return (
     <>
       <svg className="spark" viewBox={`0 0 ${w} ${h}`}>
-        {yTicks.map((value, index) => <g key={index}><line x1={padX} y1={y(value)} x2={w - padX} y2={y(value)} className="spark-grid" /><text x="4" y={y(value) + 3} className="spark-axis">{fmtWeight(value)}</text></g>)}
+        {yTicks.map((value, index) => <g key={index}>
+          <line x1={padX} y1={y(value)} x2={w - padX} y2={y(value)} className="spark-grid" />
+          <text x="4" y={y(value) + 3} className="spark-axis">{fmtWeight(value)}
+          </text>
+        </g>)}
         <polyline points={line(weights)} className="spark-line weight" />
         <polyline points={line(trend)} className="spark-line trend-line" />
         {entries.map((entry, index) => <circle key={entry.date} cx={x(index)} cy={y(entry.gewicht)} r="2.2" className="spark-dot"><title>{`${fmtDateLong(entry.date)} • ${fmtWeight(entry.gewicht)} kg • ${fmt(deficit(entry))} ${lang === 'de' ? 'kcal Defizit' : 'kcal deficit'}`}</title></circle>)}
         <circle cx={x(entries.length - 1)} cy={y(last.gewicht)} r="3.4" className="spark-dot current" />
         <text x={Math.min(w - 76, Math.max(padX, x(entries.length - 1) - 34))} y={Math.max(12, y(last.gewicht) - 8)} className="spark-last">{fmtWeight(last.gewicht)} kg</text>
       </svg>
-      <div className="spark-days">{xTicks.map(entry => <span key={entry.date}>{fmtDate(entry.date)}</span>)}</div>
+      <div className="spark-days">{xTicks.map(entry =>
+        <span key={entry.date}>{fmtDate(entry.date)}
+        </span>)}
+      </div>
     </>
   );
 }

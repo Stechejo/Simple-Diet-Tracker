@@ -8,8 +8,28 @@ export default function Insights({ entries, targetWeight, targetDeficit, t, lang
   if (!latest) {
     return (
       <div className="insight-grid">
-        <div className="insight"><div className="insight-label">{t.insightPlan}</div><div className="insight-main">-</div><div className="insight-sub">{t.insightPlanEmpty}</div></div>
-        <div className="insight"><div className="insight-label">{t.insightForecast}</div><div className="insight-main">-</div><div className="insight-sub">{t.insightForecastEmpty}</div></div>
+        <div className="insight">
+          <div className="insight-label">
+            {t.insightPlan}
+          </div>
+          <div className="insight-main">
+            -
+          </div>
+          <div className="insight-sub">
+            {t.insightPlanEmpty}
+          </div>
+        </div>
+        <div className="insight">
+          <div className="insight-label">
+            {t.insightForecast}
+          </div>
+          <div className="insight-main">
+            -
+          </div>
+          <div className="insight-sub">
+            {t.insightForecastEmpty}
+          </div>
+        </div>
       </div>
     );
   }
@@ -31,14 +51,30 @@ export default function Insights({ entries, targetWeight, targetDeficit, t, lang
   return (
     <div className="insight-grid">
       <div className="insight">
-        <div className="insight-label">{t.insightPlan}</div>
-        <div className="insight-main"><span className="badge"><span className={`dot ${statusClass}`}></span>{fmt(latestDeficit)} kcal {lang === 'de' ? 'Defizit' : 'deficit'}</span></div>
-        <div className="insight-sub">{targetDeficit > 0 ? (gap >= 0 ? t.kcalOverTarget(fmt(gap)) : t.kcalUnderTarget(fmt(Math.abs(gap)))) : t.setTargetDeficit}</div>
+        <div className="insight-label">
+          {t.insightPlan}
+        </div>
+        <div className="insight-main">
+          <span className="badge">
+            <span className={`dot ${statusClass}`}>
+            </span>
+            {fmt(latestDeficit)} kcal {lang === 'de' ? 'Defizit' : 'deficit'}
+          </span>
+        </div>
+        <div className="insight-sub">
+          {targetDeficit > 0 ? (gap >= 0 ? t.kcalOverTarget(fmt(gap)) : t.kcalUnderTarget(fmt(Math.abs(gap)))) : t.setTargetDeficit}
+        </div>
       </div>
       <div className="insight">
-        <div className="insight-label">{t.insightForecast}</div>
-        <div className="insight-main">{forecastMain}</div>
-        <div className="insight-sub">{forecastSub}</div>
+        <div className="insight-label">
+          {t.insightForecast}
+        </div>
+        <div className="insight-main">
+          {forecastMain}
+        </div>
+        <div className="insight-sub">
+          {forecastSub}
+        </div>
       </div>
     </div>
   );

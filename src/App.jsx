@@ -165,7 +165,11 @@ export default function App() {
         <Stats entries={entries} startWeight={startWeight} t={t} />
         <Insights entries={entries} targetWeight={targetWeight} targetDeficit={targetDeficit} t={t} lang={lang} />
         <RangeChart entries={visibleEntries} range={range} setRange={setRange} t={t} lang={lang} />
-        <div className="quick-actions"><button className="primary-action" onClick={openNewEntry}>{t.btnAddEntry}</button></div>
+        <div className="quick-actions">
+          <button className="primary-action" onClick={openNewEntry}>
+            {t.btnAddEntry}
+            </button>
+            </div>
         <Tabs t={t} />
         <BackupBar t={t} onExport={exportData} onImport={importData} />
         <Routes>

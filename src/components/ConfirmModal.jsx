@@ -4,11 +4,17 @@ export default function ConfirmModal({ title, message, cancelLabel, confirmLabel
             <div className="confirm-backdrop" onClick={onCancel}></div>
 
             <div className="confirm-box">
-                <h3 id="confirm-title" className="confirm-title">{title}</h3>
-                <p id="confirm-text" className="confirm-text">{message}</p>
+                <h3 id="confirm-title" className="confirm-title">
+                    {title}
+                </h3>
+                <p id="confirm-text" className="confirm-text">
+                    {message}
+                </p>
 
                 <div className="confirm-actions">
-                    <button onClick={onCancel}>{cancelLabel}</button>
+                    <button onClick={onCancel}>
+                        {cancelLabel}
+                    </button>
                     <button className="confirm-ok" onClick={onConfirm}>
                         {confirmLabel}
                     </button>
