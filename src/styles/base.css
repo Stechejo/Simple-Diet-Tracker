@@ -1,0 +1,142 @@
+/* =========================
+   FONTS
+========================= */
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('../assets/fonts/noto-sans/NotoSans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('../assets/fonts/noto-sans/NotoSans-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Sans';
+    src: url('../assets/fonts/noto-sans/NotoSans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+/* =========================
+   RESET
+========================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================
+   VARIABLES
+========================= */
+:root {
+    --bg: #0f0f0f;
+    --bg2: #141414;
+    --bg3: #1c1c1c;
+
+    --border: #222;
+    --border2: #1e1e1e;
+
+    --text: #e8e0d0;
+    --muted: #555;
+
+    --gold: #c8a86b;
+    --green: #4caf82;
+    --yellow: #c8a86b;
+    --red: #c0392b;
+}
+
+
+/* =========================
+   BASE LAYOUT
+========================= */
+html,
+body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans', sans-serif;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 2px;
+}
+
+
+/* =========================
+   GLOBAL HELPERS
+========================= */
+.green {
+    color: var(--green);
+}
+
+.yellow {
+    color: var(--yellow);
+}
+
+.red {
+    color: var(--red);
+}
+
+
+/* =========================
+   ANIMATIONS
+========================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes modalFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes sheetIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}

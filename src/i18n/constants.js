@@ -1,0 +1,1 @@
+export const LANG_KEY = 'diaet-tracker-lang';

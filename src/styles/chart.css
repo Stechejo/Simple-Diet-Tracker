@@ -1,0 +1,164 @@
+/* =========================
+   CHART CONTAINER
+========================= */
+.chart-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px 18px 14px;
+    margin-bottom: 28px;
+}
+
+.chart-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: baseline;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.chart-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+
+/* =========================
+   LEGEND
+========================= */
+.legend {
+    display: flex;
+    gap: 12px;
+    font-size: 10px;
+    color: #666;
+}
+
+.legend span::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 2px;
+    margin-right: 5px;
+    vertical-align: middle;
+    background: var(--gold);
+}
+
+.legend .trend::before {
+    background: var(--green);
+}
+
+
+/* =========================
+   RANGE SELECT
+========================= */
+.range-select {
+    margin-left: auto;
+    background: var(--bg3);
+    border: 1px solid #333;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    border-radius: 4px;
+    padding: 7px 9px;
+    outline: none;
+}
+
+.range-select:focus {
+    border-color: var(--gold);
+}
+
+
+/* =========================
+   SPARKLINE SVG
+========================= */
+svg.spark {
+    width: 100%;
+    min-height: 150px;
+    overflow: visible;
+    margin-top: 4px;
+}
+
+.spark-grid {
+    stroke: #252525;
+    stroke-width: .7;
+    stroke-dasharray: 3 5;
+}
+
+.spark-axis {
+    fill: #575757;
+    font-size: 8px;
+}
+
+.spark-line {
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.spark-line.weight {
+    stroke: var(--gold);
+}
+
+.spark-line.trend-line {
+    stroke: var(--green);
+    opacity: .9;
+}
+
+.spark-dot {
+    fill: var(--bg2);
+    stroke: var(--gold);
+    stroke-width: 1.2;
+}
+
+.spark-dot.current {
+    fill: var(--gold);
+    stroke: var(--text);
+}
+
+.spark-last {
+    fill: var(--text);
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+/* =========================
+   X-AXIS LABELS
+========================= */
+.spark-days {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #444;
+    margin-top: 6px;
+    padding-left: 32px;
+    gap: 10px;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 700px) {
+    svg.spark {
+        min-height: 132px;
+    }
+
+    .spark-days {
+        padding-left: 26px;
+        overflow: hidden;
+    }
+
+    .chart-head {
+        align-items: flex-start;
+    }
+
+    .range-select {
+        width: 100%;
+        margin-left: 0;
+    }
+}

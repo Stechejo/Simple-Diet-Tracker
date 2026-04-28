@@ -1,0 +1,242 @@
+/* =========================
+   MODAL BASE
+========================= */
+body.modal-open {
+    overflow: hidden;
+}
+
+
+/* =========================
+   ENTRY / SETTINGS MODAL
+========================= */
+.entry-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.entry-modal.active {
+    display: flex;
+}
+
+.entry-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .72);
+    backdrop-filter: blur(10px);
+    animation: modalFade .18s ease;
+}
+
+.entry-sheet {
+    position: relative;
+    width: min(540px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    background: var(--bg2);
+    border: 1px solid #2c2c2c;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+    animation: sheetIn .22s ease;
+}
+
+.entry-sheet-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+}
+
+.entry-kicker {
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+}
+
+.entry-sheet h2 {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 22px;
+    line-height: 1.1;
+}
+
+.entry-close {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg3);
+    border: 1px solid #333;
+    color: var(--muted);
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    transition: all .2s ease;
+}
+
+.entry-close:hover {
+    color: var(--gold);
+    border-color: var(--gold);
+}
+
+.entry-actions {
+    display: grid;
+    grid-template-columns: .8fr 1.2fr;
+    gap: 10px;
+}
+
+.entry-actions .cancel-btn,
+.entry-actions .add-btn {
+    display: block;
+}
+
+
+/* =========================
+   CONFIRM MODAL
+========================= */
+.confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+}
+
+.confirm-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, .7);
+    animation: modalFade .18s ease;
+}
+
+.confirm-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(360px, calc(100vw - 32px));
+    transform: translate(-50%, -50%);
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .55);
+    animation: confirmIn .22s ease;
+}
+
+.confirm-title {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.confirm-text {
+    font-size: 13px;
+    margin-bottom: 16px;
+    color: var(--text);
+    line-height: 1.45;
+}
+
+.confirm-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.confirm-actions button {
+    flex: 1;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background: var(--bg3);
+    color: var(--text);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+}
+
+.confirm-actions button:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.confirm-ok {
+    border-color: var(--red) !important;
+    color: var(--red) !important;
+}
+
+.confirm-ok:hover {
+    border-color: var(--red) !important;
+    color: var(--red) !important;
+}
+
+
+/* =========================
+   INPUT FIXES INSIDE MODALS
+========================= */
+.field input[type="number"]::-webkit-outer-spin-button,
+.field input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.field input[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(72%) sepia(23%) saturate(676%) hue-rotate(2deg) brightness(88%) contrast(88%);
+    opacity: .85;
+}
+
+.field input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 700px) {
+    .entry-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .entry-sheet {
+        width: 100%;
+        max-height: 88vh;
+        border-radius: 18px 18px 0 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        padding: 18px 16px 20px;
+    }
+
+    .entry-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================
+   CONFIRM ANIMATION
+========================= */
+@keyframes confirmIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%) scale(.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}

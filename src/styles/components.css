@@ -1,0 +1,378 @@
+/* =========================
+   STATS
+========================= */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.stat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    min-width: 0;
+}
+
+.stat-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.stat-value {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   INSIGHTS
+========================= */
+.insight-grid {
+    display: grid;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.insight {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+}
+
+.insight-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.insight-main {
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.insight-sub {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.45;
+}
+
+
+/* =========================
+   BADGES / DOTS
+========================= */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 11px;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dot.green {
+    background: var(--green);
+}
+
+.dot.yellow {
+    background: var(--yellow);
+}
+
+.dot.red {
+    background: var(--red);
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+.primary-action {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold), #d9bd82);
+    border: 1px solid rgba(200, 168, 107, .65);
+    color: #0f0f0f;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 15px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+    transition: transform .2s ease, opacity .2s ease, box-shadow .2s ease;
+}
+
+.primary-action:hover {
+    opacity: .92;
+    transform: translateY(-1px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .28);
+}
+
+.primary-action:active {
+    transform: translateY(0) scale(.99);
+}
+
+
+.add-btn {
+    background: var(--gold);
+    border: none;
+    color: #0f0f0f;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 13px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    transition: opacity .2s;
+}
+
+.add-btn:hover {
+    opacity: .85;
+}
+
+.add-btn:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.cancel-btn {
+    background: none;
+    border: 1px solid #333;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 12px 24px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.cancel-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* =========================
+   HEADER BUTTONS
+========================= */
+.lang-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.lang-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--bg2);
+}
+
+.lang-btn:active {
+    transform: scale(0.97);
+}
+
+/* =========================
+   PERIOD / FILTER BUTTONS
+========================= */
+.period-mode {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    padding: 7px 12px;
+}
+
+.period-mode.active,
+.period-mode:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+/* =========================
+   BACKUP / IMPORT
+========================= */
+.backup-bar {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 24px 0 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border2);
+}
+
+.backup-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .08em;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.backup-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--bg2);
+}
+
+.backup-btn:active {
+    transform: scale(0.97);
+}
+
+label.backup-btn {
+    cursor: pointer;
+}
+
+
+/* =========================
+   TABS
+========================= */
+.tabs {
+    display: flex;
+    gap: 24px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 20px;
+    overflow-x: auto;
+}
+
+.tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 8px 0;
+    color: var(--muted);
+    transition: all .2s;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+}
+
+.tab.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+}
+
+
+/* =========================
+   FORMS
+========================= */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.field label {
+    display: block;
+    font-size: 10px;
+    color: #666;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.field input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid #333;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+}
+
+.field input:focus {
+    border-color: var(--gold);
+}
+
+.field input::placeholder {
+    color: #444;
+}
+
+
+/* =========================
+   MISC
+========================= */
+.quick-actions {
+    margin: -8px 0 20px;
+}
+
+.preview {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 12px;
+    display: none;
+}
+
+.preview.error {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.footer {
+    margin-top: 32px;
+    font-size: 10px;
+    color: #2e2e2e;
+    text-align: center;
+    letter-spacing: .08em;
+}
