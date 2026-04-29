@@ -9,23 +9,22 @@ import Tabs from './components/Tabs.jsx';
 import EntryModal from './components/EntryModal.jsx';
 import SettingsModal from './components/SettingsModal.jsx';
 import Toast from './components/Toast.jsx';
+import ConfirmModal from './components/ConfirmModal.jsx';
 import OverviewPage from './pages/OverviewPage.jsx';
 import PeriodsPage from './pages/PeriodsPage.jsx';
-import { LANG_KEY, TRANSLATIONS } from './i18n/translations.js';
-import { START_WEIGHT_KEY, TARGET_DEFICIT_KEY, TARGET_KEY, loadEntries, loadNumber, saveEntries, saveNumber } from './storage/storage.js';
-import { filterByRange, normalizeEntries } from './utils/calculations.js';
+import { filterByRange } from './utils/calculations.js';
 import { todayISO } from './utils/date.js';
-import { fmtDateLong, formNum } from './utils/format.js';
-import ConfirmModal from './components/ConfirmModal.jsx';
+import { fmtDateLong } from './utils/format.js';
+import { useLanguage } from './hooks/useLanguage.js';
+import { useToast } from './hooks/useToast.js';
+import { useTrackerState } from './hooks/useTrackerState.js';
+
+const emptyEntryForm = () => ({ date: todayISO(), verbraucht: '', intake: '', gewicht: '' });
 
 export default function App() {
-  const [lang, setLang] = useState(localStorage.getItem(LANG_KEY) || 'de');
-  const t = TRANSLATIONS[lang];
-
-  const [entries, setEntries] = useState(loadEntries);
-  const [startWeight, setStartWeight] = useState(() => loadNumber(START_WEIGHT_KEY));
-  const [targetWeight, setTargetWeight] = useState(() => loadNumber(TARGET_KEY));
-  const [targetDeficit, setTargetDeficit] = useState(() => loadNumber(TARGET_DEFICIT_KEY));
+  const { lang, t, toggleLang } = useLanguage();
+  const tracker = useTrackerState();
+  const { toast, notify } = useToast();
 
   const [range, setRange] = useState(7);
   const [periodMode, setPeriodMode] = useState('weeks');
@@ -33,23 +32,12 @@ export default function App() {
   const [entryOpen, setEntryOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [editingDate, setEditingDate] = useState(null);
-  const [toast, setToast] = useState(null);
   const [deleteDate, setDeleteDate] = useState(null);
-  const [form, setForm] = useState({ date: todayISO(), verbraucht: '', intake: '', gewicht: '' });
+  const [form, setForm] = useState(emptyEntryForm);
   const [settings, setSettings] = useState({ startWeight: '', targetWeight: '', targetDeficit: '' });
 
   useEffect(() => {
-    document.title = lang === 'de' ? 'Diät Tracker' : 'Diet Tracker';
-    localStorage.setItem(LANG_KEY, lang);
-  }, [lang]);
-
-  useEffect(() => saveEntries(entries), [entries]);
-  useEffect(() => saveNumber(START_WEIGHT_KEY, startWeight), [startWeight]);
-  useEffect(() => saveNumber(TARGET_KEY, targetWeight), [targetWeight]);
-  useEffect(() => saveNumber(TARGET_DEFICIT_KEY, targetDeficit), [targetDeficit]);
-
-  useEffect(() => {
-    document.body.classList.toggle('modal-open', entryOpen || settingsOpen || deleteDate);
+    document.body.classList.toggle('modal-open', entryOpen || settingsOpen || Boolean(deleteDate));
     return () => document.body.classList.remove('modal-open');
   }, [entryOpen, settingsOpen, deleteDate]);
 
@@ -66,73 +54,61 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  const visibleEntries = useMemo(() => filterByRange(entries, range), [entries, range]);
-  const headerSub = !entries.length ? t.headerNoEntries : `${entries.length} ${t.entries} • ${t.view} ${fmtDateLong((visibleEntries[0] || entries[0]).date)}-${fmtDateLong((visibleEntries.at(-1) || entries.at(-1)).date)}`;
-
-  function notify(message, type = 'success') {
-    setToast({ message, type });
-    window.clearTimeout(window.dietTrackerToastTimer);
-    window.dietTrackerToastTimer = window.setTimeout(() => setToast(null), 2600);
-  }
+  const visibleEntries = useMemo(() => filterByRange(tracker.entries, range), [tracker.entries, range]);
+  const headerSub = !tracker.entries.length
+    ? t.headerNoEntries
+    : `${tracker.entries.length} ${t.entries} • ${t.view} ${fmtDateLong((visibleEntries[0] || tracker.entries[0]).date)}-${fmtDateLong((visibleEntries.at(-1) || tracker.entries.at(-1)).date)}`;
 
   function openNewEntry() {
     setEditingDate(null);
-    setForm({ date: todayISO(), verbraucht: '', intake: '', gewicht: '' });
+    setForm(emptyEntryForm());
     setEntryOpen(true);
   }
 
   function editEntry(date) {
-    const entry = entries.find(item => item.date === date);
+    const entry = tracker.getEntryByDate(date);
     if (!entry) return;
+
     setEditingDate(date);
     setForm({ date: entry.date, verbraucht: entry.verbraucht, intake: entry.intake, gewicht: entry.gewicht });
     setEntryOpen(true);
   }
 
   function saveEntry() {
-    const entry = {
-      date: form.date,
-      verbraucht: formNum(form.verbraucht),
-      intake: formNum(form.intake),
-      gewicht: formNum(form.gewicht)
-    };
-    if (!entry.date || entry.verbraucht <= 0 || entry.intake < 0 || entry.gewicht <= 0) return;
-    setEntries(previous => normalizeEntries([...previous.filter(item => item.date !== (editingDate || entry.date)), entry]));
+    const saved = tracker.addOrUpdateEntry(form, editingDate);
+    if (!saved) return;
+
     setEntryOpen(false);
     setEditingDate(null);
   }
 
-  function deleteEntry(date) {
-    setDeleteDate(date);
-  }
-
   function confirmDeleteEntry() {
-    setEntries(previous =>
-      normalizeEntries(previous.filter(entry => entry.date !== deleteDate))
-    );
+    tracker.deleteEntry(deleteDate);
     setDeleteDate(null);
     notify(t.toastDeleteOk);
   }
 
   function openSettings() {
-    setSettings({ startWeight: startWeight || '', targetWeight: targetWeight || '', targetDeficit: targetDeficit || '' });
+    setSettings({
+      startWeight: tracker.startWeight || '',
+      targetWeight: tracker.targetWeight || '',
+      targetDeficit: tracker.targetDeficit || ''
+    });
     setSettingsOpen(true);
   }
 
   function saveSettings() {
-    setStartWeight(formNum(settings.startWeight));
-    setTargetWeight(formNum(settings.targetWeight));
-    setTargetDeficit(formNum(settings.targetDeficit));
+    tracker.updateSettings(settings);
     setSettingsOpen(false);
     notify(t.settingsSaved);
   }
 
   function exportData() {
-    const data = JSON.stringify({ entries, startWeight, targetWeight, targetDeficit, exportDate: new Date().toISOString() }, null, 2);
-    const url = URL.createObjectURL(new Blob([data], { type: 'text/plain' }));
+    const backup = tracker.createBackup();
+    const url = URL.createObjectURL(new Blob([backup.content], { type: 'text/plain' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = `diaet-tracker-backup-${todayISO()}.txt`;
+    a.download = backup.filename;
     a.click();
     URL.revokeObjectURL(url);
     notify(t.toastExportOk);
@@ -140,19 +116,14 @@ export default function App() {
 
   function importData(file) {
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = event => {
       try {
-        const imported = JSON.parse(event.target.result);
-        if (!Array.isArray(imported.entries)) return notify(t.toastImportInvalid, 'error');
-        const normalized = normalizeEntries(imported.entries);
-        setEntries(normalized);
-        if (imported.startWeight > 0) setStartWeight(imported.startWeight);
-        if (imported.targetWeight > 0) setTargetWeight(imported.targetWeight);
-        if (imported.targetDeficit > 0) setTargetDeficit(imported.targetDeficit);
-        notify(t.toastImportOk(normalized.length));
+        const count = tracker.importSnapshot(event.target.result);
+        notify(t.toastImportOk(count));
       } catch (error) {
-        notify(t.toastImportFailed(error.message), 'error');
+        notify(error.message === 'NO_TRACKER_DATA' ? t.toastImportInvalid : t.toastImportFailed(error.message), 'error');
       }
     };
     reader.readAsText(file);
@@ -160,21 +131,35 @@ export default function App() {
 
   return (
     <>
-      <Header t={t} headerSub={headerSub} onOpenSettings={openSettings} onToggleLang={() => setLang(lang === 'de' ? 'en' : 'de')} />
+      <Header t={t} headerSub={headerSub} onOpenSettings={openSettings} onToggleLang={toggleLang} />
       <main className="wrap">
-        <Stats entries={entries} startWeight={startWeight} t={t} />
-        <Insights entries={entries} targetWeight={targetWeight} targetDeficit={targetDeficit} t={t} lang={lang} />
+        <Stats entries={tracker.entries} startWeight={tracker.startWeight} t={t} />
+        <Insights entries={tracker.entries} targetWeight={tracker.targetWeight} targetDeficit={tracker.targetDeficit} t={t} lang={lang} />
         <RangeChart entries={visibleEntries} range={range} setRange={setRange} t={t} lang={lang} />
         <div className="quick-actions">
           <button className="primary-action" onClick={openNewEntry}>
             {t.btnAddEntry}
-            </button>
-            </div>
+          </button>
+        </div>
         <Tabs t={t} />
         <BackupBar t={t} onExport={exportData} onImport={importData} />
         <Routes>
-          <Route path="/" element={<OverviewPage entries={showAll ? entries : entries.slice(-7)} total={entries.length} showAll={showAll} setShowAll={setShowAll} editEntry={editEntry} deleteEntry={deleteEntry} targetDeficit={targetDeficit} t={t} />} />
-          <Route path="/perioden" element={<PeriodsPage entries={entries} mode={periodMode} setMode={setPeriodMode} t={t} lang={lang} />} />
+          <Route
+            path="/"
+            element={
+              <OverviewPage
+                entries={showAll ? tracker.entries : tracker.entries.slice(-7)}
+                total={tracker.entries.length}
+                showAll={showAll}
+                setShowAll={setShowAll}
+                editEntry={editEntry}
+                deleteEntry={setDeleteDate}
+                targetDeficit={tracker.targetDeficit}
+                t={t}
+              />
+            }
+          />
+          <Route path="/perioden" element={<PeriodsPage entries={tracker.entries} mode={periodMode} setMode={setPeriodMode} t={t} lang={lang} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <div className="footer">{t.footer}</div>
