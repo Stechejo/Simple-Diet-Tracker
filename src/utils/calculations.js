@@ -18,9 +18,24 @@ export function normalizeEntries(entries) {
     .map((entry, index) => ({ ...entry, tag: index + 1 }));
 }
 
+export const exponentialMovingAverage = (values, alpha = 0.4) => {
+  if (!values.length) return [];
+
+  const result = [values[0]];
+
+  for (let i = 1; i < values.length; i++) {
+    result.push(alpha * values[i] + (1 - alpha) * result[i - 1]);
+  }
+
+  return result;
+};
+
 export const getLatest = entries => entries.length ? entries.at(-1) : null;
 export const getAvgDeficit = entries => entries.length ? Math.round(entries.reduce((sum, entry) => sum + deficit(entry), 0) / entries.length) : 0;
-export const trendWeight = entries => entries.length ? movingAverage(entries.map(entry => entry.gewicht), 7).at(-1) : null;
+export const trendWeight = entries =>
+  entries.length
+    ? exponentialMovingAverage(entries.map(entry => entry.gewicht), 0.3).at(-1)
+    : null;
 
 export function filterByRange(entries, days) {
   if (!entries.length) return [];
