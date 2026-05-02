@@ -4,7 +4,7 @@ export const en = {
 
     statLost: 'Lost',
     statDeficit: 'Avg Deficit',
-    statTrend: '7D Weight',
+    statTrend: 'Trend Weight',
     statToday: 'Today',
 
     insightPlan: 'On plan today?',
@@ -20,7 +20,7 @@ export const en = {
 
     chartLabel: 'Weight History',
     legendWeight: 'Weight',
-    legendTrend: '7D Trend',
+    legendTrend: 'Trend',
     range7: '1 Week',
     range14: '2 Weeks',
     range30: '1 Month',
