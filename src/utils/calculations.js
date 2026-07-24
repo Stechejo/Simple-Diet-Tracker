@@ -1,7 +1,14 @@
 import { addDaysISO, isValidISODate, todayISO } from './date.js';
 import { fmtDate } from './format.js';
 
-export const deficit = e => Number(e.verbraucht || 0) - Number(e.intake || 0);
+export const TEF = 0.10;
+
+export const deficit = e => {
+  const verbraucht = Number(e.verbraucht || 0);
+  const intake = Number(e.intake || 0);
+  return (verbraucht + intake * TEF) - intake; // = verbraucht - intake * (1 - TEF)
+};
+
 export const avg = arr => arr.length ? arr.reduce((sum, n) => sum + n, 0) / arr.length : 0;
 export const movingAverage = (values, window = 7) => values.map((_, index) => avg(values.slice(Math.max(0, index - window + 1), index + 1)));
 
